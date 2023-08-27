@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+npx tailwindcss -i ./main.css -o ./public/main.css --watch
