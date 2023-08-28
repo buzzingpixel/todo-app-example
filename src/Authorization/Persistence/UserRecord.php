@@ -2,29 +2,27 @@
 
 declare(strict_types=1);
 
-namespace App\ToDo\Persistence;
+namespace App\Authorization\Persistence;
 
 use App\Persistence\Record;
 
 // phpcs:disable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 
-class ToDoRecord extends Record
+class UserRecord extends Record
 {
     public static function getTableName(): string
     {
-        return 'todos';
+        return 'users';
     }
 
     public function tableName(): string
     {
-        return 'todos';
+        return 'users';
     }
 
     public string $id = '';
 
-    public string $user_id = '';
+    public string $email = '';
 
-    public string $title = '';
-
-    public bool $is_done = false;
+    public string $name = '';
 }
