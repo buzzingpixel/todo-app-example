@@ -1,0 +1,68 @@
+<?php
+
+use App\App;
+use App\ToDo\ToDo;
+use App\ToDo\ToDoCollection;
+use BuzzingPixel\Templating\TemplateEngine;
+
+/** @phpstan-ignore-next-line */
+assert($this instanceof TemplateEngine);
+
+/**
+ * @phpstan-ignore-next-line
+ * @noinspection PhpUndefinedVariableInspection
+ */
+assert($todos instanceof ToDoCollection);
+
+$this->extends(App::PATH . '/Layout.phtml');
+?>
+
+<div class="mx-auto max-w-2xl">
+    <div class="p-1 m-4 text-right">
+        <a
+            href="/todos/add"
+            class="rounded-full bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        >
+            Add ToDo
+        </a>
+    </div>
+    <div class="p-4 border border-gray-100 rounded-md shadow-md m-4">
+        <ul role="list" class="divide-y divide-gray-100">
+            <?php
+                $todos->map(static function (ToDo $todo) {
+                    $titleAddClasses = 'text-gray-900';
+
+                    if ($todo->isDone->isTrue()) {
+                        $titleAddClasses = 'line-through text-gray-400';
+                    }
+                    ?>
+                    <li class="flex items-center justify-between gap-x-6 py-5">
+                        <div class="flex min-w-0 gap-x-4">
+                            <div class="min-w-0 flex-auto">
+                                <p class="text-sm font-semibold leading-6 <?=$titleAddClasses?>">
+                                    <?=$todo->title->toNative()?>
+                                </p>
+                            </div>
+                        </div>
+                        <?php if ($todo->isDone->isTrue()): ?>
+                            <a
+                                href="#"
+                                class="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                            >
+                                Mark Uncompleted
+                            </a>
+                        <?php else: ?>
+                            <a
+                                href="#"
+                                class="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                            >
+                                Complete
+                            </a>
+                        <?php endif; ?>
+                    </li>
+                    <?php
+                })
+            ?>
+        </ul>
+    </div>
+</div>
