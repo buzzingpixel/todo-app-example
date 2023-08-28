@@ -25,4 +25,6 @@ class UserRecord extends Record
     public string $email = '';
 
     public string $name = '';
+
+    public string $password_hash = '';
 }
