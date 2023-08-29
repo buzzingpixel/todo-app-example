@@ -31,9 +31,13 @@ $this->extends(App::PATH . '/Layout.phtml');
             <?php
                 $todos->map(static function (ToDo $todo) {
                     $titleAddClasses = 'text-gray-900';
+                    $markDoneButtonText = 'Mark Done';
+                    $formAction = '/todos/mark/done';
 
                     if ($todo->isDone->isTrue()) {
                         $titleAddClasses = 'line-through text-gray-400';
+                        $markDoneButtonText = 'Mark Not done';
+                        $formAction = '/todos/mark/not-done';
                     }
                     ?>
                     <li class="flex items-center justify-between gap-x-6 py-5">
@@ -44,21 +48,25 @@ $this->extends(App::PATH . '/Layout.phtml');
                                 </p>
                             </div>
                         </div>
-                        <?php if ($todo->isDone->isTrue()): ?>
-                            <a
-                                href="#"
-                                class="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                        <div>
+                            <form
+                                action="<?=$formAction?>"
+                                method="POST"
+                                class="inline-block"
                             >
-                                Mark Uncompleted
-                            </a>
-                        <?php else: ?>
-                            <a
-                                href="#"
-                                class="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                            >
-                                Complete
-                            </a>
-                        <?php endif; ?>
+                                <input
+                                    type="hidden"
+                                    name="id"
+                                    value="<?=$todo->id->toNative()?>"
+                                >
+                                <button
+                                    type="submit"
+                                    class="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                                >
+                                    <?=$markDoneButtonText?>
+                                </button>
+                            </form>
+                        </div>
                     </li>
                     <?php
                 })

@@ -9,6 +9,7 @@ use App\Persistence\UuidFactoryWithOrderedTimeCodec;
 use App\ToDo\Persistence\ActionResult;
 use App\ToDo\Persistence\CreateToDo;
 use App\ToDo\Persistence\FindToDos;
+use App\ToDo\Persistence\SaveToDo;
 use App\ToDo\Persistence\ToDoRecord;
 
 // phpcs:disable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
@@ -16,6 +17,7 @@ use App\ToDo\Persistence\ToDoRecord;
 readonly class ToDoRepository
 {
     public function __construct(
+        private SaveToDo $save,
         private FindToDos $find,
         private CreateToDo $create,
         private UuidFactoryWithOrderedTimeCodec $uuidFactory,
@@ -33,6 +35,21 @@ readonly class ToDoRepository
         $record->title = $title;
 
         return $this->create->create($record);
+    }
+
+    public function save(ToDo $todo): ActionResult
+    {
+        $record = new ToDoRecord();
+
+        $record->id = $todo->id->toNative();
+
+        $record->user_id = $todo->userId->toNative();
+
+        $record->title = $todo->title->toNative();
+
+        $record->is_done = $todo->isDone->toNative();
+
+        return $this->save->save($record);
     }
 
     public function findOne(string|null $idOrUserId = null): ToDo
