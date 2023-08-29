@@ -1,9 +1,29 @@
 <?php
 
 use BuzzingPixel\Templating\TemplateEngine;
+use Slim\Factory\ServerRequestCreatorFactory;
 
 /** @phpstan-ignore-next-line */
 assert($this instanceof TemplateEngine);
+
+$request = ServerRequestCreatorFactory::create()->createServerRequestFromGlobals();
+
+$segs = explode('/', trim($request->getUri()->getPath(), '/'));
+
+$firstSeg = $segs[0];
+
+$tabs = [
+    [
+        'title' => 'ToDos',
+        'href' => '/todos',
+        'isActive' => $firstSeg === 'todos',
+    ],
+    [
+        'title' => 'Notes',
+        'href' => '/notes',
+        'isActive' => $firstSeg === 'notes',
+    ],
+];
 ?>
 <!doctype html>
 <html lang="" class="h-full">
@@ -14,6 +34,26 @@ assert($this instanceof TemplateEngine);
     <title>Hello World</title>
 </head>
 <body class="h-full">
+<div>
+    <div class="max-w-2xl mx-auto">
+        <nav class="isolate flex divide-x divide-gray-200 rounded-lg shadow" aria-label="Tabs">
+            <?php foreach ($tabs as $tab): ?>
+                <?php if ($tab['isActive']): ?>
+                    <a href="<?=$tab['href']?>" class="text-gray-900 rounded-l-lg group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-4 text-center text-sm font-medium hover:bg-gray-50 focus:z-10" aria-current="page">
+                        <span><?=$tab['title']?></span>
+                        <span aria-hidden="true" class="bg-indigo-500 absolute inset-x-0 bottom-0 h-0.5"></span>
+                    </a>
+                <?php else: ?>
+                    <a href="<?=$tab['href']?>" class="text-gray-500 hover:text-gray-700 group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-4 text-center text-sm font-medium hover:bg-gray-50 focus:z-10">
+                        <span><?=$tab['title']?></span>
+                        <span aria-hidden="true" class="bg-transparent absolute inset-x-0 bottom-0 h-0.5"></span>
+                    </a>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </nav>
+    </div>
+</div>
+
 <?= $this->getSection('layoutContent') ?>
 </body>
 </html>
