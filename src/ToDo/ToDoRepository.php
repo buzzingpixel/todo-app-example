@@ -8,6 +8,7 @@ use App\Authorization\User;
 use App\Persistence\UuidFactoryWithOrderedTimeCodec;
 use App\ToDo\Persistence\ActionResult;
 use App\ToDo\Persistence\CreateToDo;
+use App\ToDo\Persistence\DeleteToDo;
 use App\ToDo\Persistence\FindToDos;
 use App\ToDo\Persistence\SaveToDo;
 use App\ToDo\Persistence\ToDoRecord;
@@ -20,6 +21,7 @@ readonly class ToDoRepository
         private SaveToDo $save,
         private FindToDos $find,
         private CreateToDo $create,
+        private DeleteToDo $delete,
         private UuidFactoryWithOrderedTimeCodec $uuidFactory,
     ) {
     }
@@ -50,6 +52,11 @@ readonly class ToDoRepository
         $record->is_done = $todo->isDone->toNative();
 
         return $this->save->save($record);
+    }
+
+    public function delete(string $id): ActionResult
+    {
+        return $this->delete->delete($id);
     }
 
     public function findOne(string|null $idOrUserId = null): ToDo

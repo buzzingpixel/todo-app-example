@@ -10,8 +10,9 @@ use App\Persistence\AppPdoFactory;
 use App\ToDo\Add\GetAddToDoAction;
 use App\ToDo\Add\PostAddToDoAction;
 use App\ToDo\GetToDoListAction;
-use App\ToDo\PostMarkCompletedAction;
-use App\ToDo\PostMarkUnCompletedAction;
+use App\ToDo\PostDeleteAction;
+use App\ToDo\PostMarkDoneAction;
+use App\ToDo\PostMarkNotDoneAction;
 use BuzzingPixel\Container\Container;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -46,13 +47,18 @@ $app->post('/todos/add', PostAddToDoAction::class)
     ->add(RequireAuthMiddleware::class);
 
 $app->post(
-    '/todos/mark/completed',
-    PostMarkCompletedAction::class,
+    '/todos/mark/done',
+    PostMarkDoneAction::class,
 )->add(RequireAuthMiddleware::class);
 
 $app->post(
-    '/todos/mark/uncompleted',
-    PostMarkUnCompletedAction::class,
+    '/todos/mark/not-done',
+    PostMarkNotDoneAction::class,
+)->add(RequireAuthMiddleware::class);
+
+$app->post(
+    '/todos/delete',
+    PostDeleteAction::class,
 )->add(RequireAuthMiddleware::class);
 
 $app->post('/login', PostLoginAction::class);
