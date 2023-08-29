@@ -7,6 +7,8 @@ use App\Authorization\RequireAuthMiddleware;
 use App\GetHelloWorldAction;
 use App\Persistence\AppPdo;
 use App\Persistence\AppPdoFactory;
+use App\ToDo\Add\GetAddToDoAction;
+use App\ToDo\Add\PostAddToDoAction;
 use App\ToDo\GetToDoListAction;
 use BuzzingPixel\Container\Container;
 use Psr\Container\ContainerInterface;
@@ -33,6 +35,12 @@ $app = AppFactory::create(container: $container);
 $app->get('/', GetHelloWorldAction::class);
 
 $app->get('/todos', GetToDoListAction::class)
+    ->add(RequireAuthMiddleware::class);
+
+$app->get('/todos/add', GetAddToDoAction::class)
+    ->add(RequireAuthMiddleware::class);
+
+$app->post('/todos/add', PostAddToDoAction::class)
     ->add(RequireAuthMiddleware::class);
 
 $app->post('/login', PostLoginAction::class);

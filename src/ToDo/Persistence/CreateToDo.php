@@ -10,7 +10,7 @@ use function implode;
 
 // phpcs:disable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 
-class CreateToDo
+readonly class CreateToDo
 {
     public function __construct(private AppPdo $pdo)
     {
@@ -18,6 +18,13 @@ class CreateToDo
 
     public function create(ToDoRecord $record): ActionResult
     {
+        if ($record->title === '') {
+            return new ActionResult(
+                false,
+                ['Title is required'],
+            );
+        }
+
         $statement = $this->pdo->prepare(implode(' ', [
             'INSERT INTO',
             $record->tableName(),
