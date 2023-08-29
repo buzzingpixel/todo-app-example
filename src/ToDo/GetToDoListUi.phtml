@@ -18,57 +18,61 @@ $this->extends(App::PATH . '/Layout.phtml');
 ?>
 
 <div class="mx-auto max-w-2xl">
-    <div class="p-1 m-4 text-right">
-        <a
-            href="/todos/add"
-            class="rounded-full bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        >
-            Add ToDo
-        </a>
-    </div>
+    <?php if ($todos->isNotEmpty()): ?>
+        <div class="p-1 m-4 text-right">
+            <a
+                href="/todos/add"
+                class="inline-flex items-center rounded-full bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+                <svg class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                </svg>
+                Add ToDo
+            </a>
+        </div>
+    <?php endif; ?>
     <div class="p-4 border border-gray-100 rounded-md shadow-md m-4">
-        <ul role="list" class="divide-y divide-gray-100">
-            <?php
-                $todos->map(static function (ToDo $todo) {
-                    $titleAddClasses = 'text-gray-900';
-                    $markDoneButtonText = 'Mark Done';
-                    $formAction = '/todos/mark/done';
+        <?php if ($todos->isEmpty()): ?>
+            <div class="text-center">
+                <h3 class="mt-2 text-sm font-semibold text-gray-900">No ToDos</h3>
+                <p class="mt-1 text-sm text-gray-500">Get started by creating one.</p>
+                <div class="mt-6">
+                    <a
+                        href="/todos/add"
+                        class="inline-flex items-center rounded-full bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    >
+                        <svg class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                        </svg>
+                        Add ToDo
+                    </a>
+                </div>
+            </div>
+        <?php else: ?>
+            <ul role="list" class="divide-y divide-gray-100">
+                <?php
+                    $todos->map(static function (ToDo $todo) {
+                        $titleAddClasses = 'text-gray-900';
+                        $markDoneButtonText = 'Mark Done';
+                        $formAction = '/todos/mark/done';
 
-                    if ($todo->isDone->isTrue()) {
-                        $titleAddClasses = 'line-through text-gray-400';
-                        $markDoneButtonText = 'Mark Not done';
-                        $formAction = '/todos/mark/not-done';
-                    }
-                    ?>
-                    <li class="flex items-center justify-between gap-x-6 py-5">
-                        <div class="flex min-w-0 gap-x-4">
-                            <div class="min-w-0 flex-auto">
-                                <p class="text-sm font-semibold leading-6 <?=$titleAddClasses?>">
-                                    <?=$todo->title->toNative()?>
-                                </p>
+                        if ($todo->isDone->isTrue()) {
+                            $titleAddClasses = 'line-through text-gray-400';
+                            $markDoneButtonText = 'Mark Not done';
+                            $formAction = '/todos/mark/not-done';
+                        }
+                        ?>
+                        <li class="flex items-center justify-between gap-x-6 py-5">
+                            <div class="flex min-w-0 gap-x-4">
+                                <div class="min-w-0 flex-auto">
+                                    <p class="text-sm font-semibold leading-6 <?=$titleAddClasses?>">
+                                        <?=$todo->title->toNative()?>
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-                        <div>
-                            <form
-                                action="<?=$formAction?>"
-                                method="POST"
-                                class="inline-block"
-                            >
-                                <input
-                                    type="hidden"
-                                    name="id"
-                                    value="<?=$todo->id->toNative()?>"
-                                >
-                                <button
-                                    type="submit"
-                                    class="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                                >
-                                    <?=$markDoneButtonText?>
-                                </button>
-                            </form>
-                            <?php if ($todo->isDone->isTrue()): ?>
+                            <div>
                                 <form
-                                    action="/todos/delete"
+                                    action="<?=$formAction?>"
                                     method="POST"
                                     class="inline-block"
                                 >
@@ -81,15 +85,34 @@ $this->extends(App::PATH . '/Layout.phtml');
                                         type="submit"
                                         class="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                                     >
-                                        Delete
+                                        <?=$markDoneButtonText?>
                                     </button>
                                 </form>
-                            <?php endif; ?>
-                        </div>
-                    </li>
-                    <?php
-                })
-            ?>
-        </ul>
+                                <?php if ($todo->isDone->isTrue()): ?>
+                                    <form
+                                        action="/todos/delete"
+                                        method="POST"
+                                        class="inline-block"
+                                    >
+                                        <input
+                                            type="hidden"
+                                            name="id"
+                                            value="<?=$todo->id->toNative()?>"
+                                        >
+                                        <button
+                                            type="submit"
+                                            class="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                                        >
+                                            Delete
+                                        </button>
+                                    </form>
+                                <?php endif; ?>
+                            </div>
+                        </li>
+                        <?php
+                    })
+                ?>
+            </ul>
+        <?php endif; ?>
     </div>
 </div>

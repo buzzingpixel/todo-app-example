@@ -8,6 +8,7 @@ use RuntimeException;
 
 use function array_map;
 use function array_values;
+use function count;
 
 class ToDoCollection
 {
@@ -46,5 +47,20 @@ class ToDoCollection
             $callback,
             $this->entities,
         ));
+    }
+
+    public function count(): int
+    {
+        return count($this->entities);
+    }
+
+    public function isEmpty(): bool
+    {
+        return $this->count() < 1;
+    }
+
+    public function isNotEmpty(): bool
+    {
+        return ! $this->isEmpty();
     }
 }
