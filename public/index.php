@@ -6,6 +6,7 @@ use App\Authorization\LogIn\PostLoginAction;
 use App\Authorization\RequireAuthMiddleware;
 use App\GetHelloWorldAction;
 use App\Notes\Add\GetAddNoteAction;
+use App\Notes\Add\PostAddNoteAction;
 use App\Notes\GetNoteListAction;
 use App\Persistence\AppPdo;
 use App\Persistence\AppPdoFactory;
@@ -69,6 +70,9 @@ $app->get('/notes', GetNoteListAction::class)
     ->add(RequireAuthMiddleware::class);
 
 $app->get('/notes/add', GetAddNoteAction::class)
+    ->add(RequireAuthMiddleware::class);
+
+$app->post('/notes/add', PostAddNoteAction::class)
     ->add(RequireAuthMiddleware::class);
 
 $app->run();
