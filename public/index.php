@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Authorization\LogIn\PostLoginAction;
 use App\Authorization\RequireAuthMiddleware;
 use App\GetHelloWorldAction;
+use App\Notes\GetNoteListAction;
 use App\Persistence\AppPdo;
 use App\Persistence\AppPdoFactory;
 use App\ToDo\Add\GetAddToDoAction;
@@ -37,6 +38,8 @@ $app = AppFactory::create(container: $container);
 
 $app->get('/', GetHelloWorldAction::class);
 
+$app->post('/login', PostLoginAction::class);
+
 $app->get('/todos', GetToDoListAction::class)
     ->add(RequireAuthMiddleware::class);
 
@@ -61,6 +64,7 @@ $app->post(
     PostDeleteAction::class,
 )->add(RequireAuthMiddleware::class);
 
-$app->post('/login', PostLoginAction::class);
+$app->get('/notes', GetNoteListAction::class)
+    ->add(RequireAuthMiddleware::class);
 
 $app->run();
