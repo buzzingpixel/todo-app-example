@@ -1,0 +1,36 @@
+<?php
+
+use App\App;
+use App\Notes\Note;
+use BuzzingPixel\Templating\TemplateEngine;
+
+/** @phpstan-ignore-next-line */
+assert($this instanceof TemplateEngine);
+
+/**
+ * @phpstan-ignore-next-line
+ * @noinspection PhpUndefinedVariableInspection
+ */
+assert($note instanceof Note);
+
+$this->extends(App::PATH . '/Layout.phtml');
+?>
+
+<div class="mx-auto max-w-2xl">
+    <div class="p-1 m-4">
+        <div class="pb-4">
+            <a
+                href="/notes"
+                class="rounded-full bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+                &lArr; Back to list
+            </a>
+        </div>
+        <h1 class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            <?=$note->title->toNative()?>
+        </h1>
+        <p class="mt-6 text-xl leading-8 text-gray-700">
+            <?=nl2br($note->note->toNative())?>
+        </p>
+    </div>
+</div>
