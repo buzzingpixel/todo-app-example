@@ -4,13 +4,21 @@ declare(strict_types=1);
 
 namespace App\Authorization;
 
+use App\Authorization\Persistence\ActionResult;
 use App\Authorization\Persistence\CreateSession;
+use App\Authorization\Persistence\CreateUser;
 use App\Authorization\Persistence\FindUsers;
 use App\Authorization\Persistence\FindUserSessions;
 use App\Authorization\Persistence\UserRecord;
 use App\Authorization\Persistence\UserSessionRecord;
+use App\Authorization\ValueObjects\Email;
 use App\Authorization\ValueObjects\Id;
+use App\Authorization\ValueObjects\Name;
 use App\Persistence\UuidFactoryWithOrderedTimeCodec;
+
+use function password_hash;
+
+use const PASSWORD_DEFAULT;
 
 // phpcs:disable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 
@@ -18,10 +26,32 @@ readonly class UserRepository
 {
     public function __construct(
         private FindUsers $findUsers,
+        private CreateUser $createUser,
         private CreateSession $createSession,
         private FindUserSessions $findUserSessions,
         private UuidFactoryWithOrderedTimeCodec $uuidFactory,
     ) {
+    }
+
+    public function createUser(
+        string $email,
+        string $name,
+        string $password,
+    ): ActionResult {
+        $record = new UserRecord();
+
+        $record->id = $this->uuidFactory->uuid4()->toString();
+
+        $record->email = Email::fromNative($email)->toNative();
+
+        $record->name = Name::fromNative($name)->toNative();
+
+        $record->password_hash = password_hash(
+            $password,
+            PASSWORD_DEFAULT,
+        );
+
+        return $this->createUser->create($record);
     }
 
     public function createSession(User $user): UserSession
