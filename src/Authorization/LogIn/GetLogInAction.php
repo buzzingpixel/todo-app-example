@@ -23,6 +23,7 @@ readonly class GetLogInAction
             $this->templateEngineFactory->create()
                 ->templatePath(__DIR__ . '/GetLoginUi.phtml')
                 ->addVar('returnTo', $request->getUri()->getPath())
+                ->addVar('hideTabs', true)
                 ->render(),
         );
 
