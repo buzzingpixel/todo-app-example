@@ -12,10 +12,21 @@ use function implode;
 
 class PostRespondWithError implements PostResponder
 {
-    public function respond(ActionResult $result): ResponseInterface
+    private ActionResult $result;
+
+    public function withResult(ActionResult $result): static
+    {
+        $clone = clone $this;
+
+        $clone->result = $result;
+
+        return $clone;
+    }
+
+    public function respond(): ResponseInterface
     {
         throw new RuntimeException(
-            implode(',', $result->message),
+            implode(',', $this->result->message),
         );
     }
 }

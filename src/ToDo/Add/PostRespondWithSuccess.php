@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\ToDo\Add;
 
-use App\ToDo\Persistence\ActionResult;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -15,7 +14,7 @@ readonly class PostRespondWithSuccess implements PostResponder
     ) {
     }
 
-    public function respond(ActionResult $result): ResponseInterface
+    public function respond(): ResponseInterface
     {
         return $this->responseFactory->createResponse(303)->withHeader(
             'Location',

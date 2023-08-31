@@ -37,8 +37,6 @@ readonly class PostAddToDoAction
             $session->user(),
         );
 
-        return $this->responderFactory->create($result)->respond(
-            $result,
-        );
+        return $this->responderFactory->create($result)->respond();
     }
 }

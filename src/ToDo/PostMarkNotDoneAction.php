@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\ToDo;
 
 use App\Authorization\UserSession;
-use App\ToDo\ValueObjects\IsDone;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -15,7 +14,7 @@ use function is_array;
 readonly class PostMarkNotDoneAction
 {
     public function __construct(
-        private ToDoRepository $repository,
+        private MarkNotDoneIfApplicable $markNotDone,
         private PostResponderFactory $responderFactory,
     ) {
     }
@@ -32,16 +31,11 @@ readonly class PostMarkNotDoneAction
 
         $postData = PostData::createFromArray($rawPostData);
 
-        $todo = $this->repository->findOne(
-            $postData->id->toNative(),
+        $result = $this->markNotDone->mark(
+            $postData,
+            $session->user(),
         );
 
-        $result = $this->repository->save($todo->with(
-            isDone: IsDone::fromNative(false),
-        ));
-
-        return $this->responderFactory->create($result)->respond(
-            $result,
-        );
+        return $this->responderFactory->create($result)->respond();
     }
 }

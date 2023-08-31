@@ -11,10 +11,10 @@ use Psr\Http\Message\ServerRequestInterface;
 use function assert;
 use function is_array;
 
-class PostDeleteAction
+readonly class PostDeleteToDoAction
 {
     public function __construct(
-        private ToDoRepository $repository,
+        private DeleteToDoIfApplicable $delete,
         private PostResponderFactory $responderFactory,
     ) {
     }
@@ -31,14 +31,11 @@ class PostDeleteAction
 
         $postData = PostData::createFromArray($rawPostData);
 
-        $todo = $this->repository->findOne(
-            $postData->id->toNative(),
+        $result = $this->delete->delete(
+            $postData,
+            $session->user(),
         );
 
-        $result = $this->repository->delete($todo->id->toNative());
-
-        return $this->responderFactory->create($result)->respond(
-            $result,
-        );
+        return $this->responderFactory->create($result)->respond();
     }
 }
