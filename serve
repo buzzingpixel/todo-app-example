@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+yarn;
+
+npx tailwindcss -i ./main.css -o ./public/main.css
+
 if [ ! -f src/Persistence/sqlite.db ]; then
     cp src/Persistence/sqlite-starter.db src/Persistence/sqlite.db;
 fi
