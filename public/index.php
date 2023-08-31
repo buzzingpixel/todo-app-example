@@ -10,33 +10,15 @@ use App\Notes\Add\PostAddNoteAction;
 use App\Notes\Details\GetViewDetailsAction;
 use App\Notes\GetNoteListAction;
 use App\Notes\PostDeleteNoteAction;
-use App\Persistence\AppPdo;
-use App\Persistence\AppPdoFactory;
 use App\ToDo\Add\GetAddToDoAction;
 use App\ToDo\Add\PostAddToDoAction;
 use App\ToDo\GetToDoListAction;
 use App\ToDo\PostDeleteToDoAction;
 use App\ToDo\PostMarkDoneAction;
 use App\ToDo\PostMarkNotDoneAction;
-use BuzzingPixel\Container\Container;
-use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ResponseFactoryInterface;
 use Slim\Factory\AppFactory;
-use Slim\Psr7\Factory\ResponseFactory;
 
-require __DIR__ . '/../vendor/autoload.php';
-
-$container = new Container(
-    [
-        AppPdo::class => static function (ContainerInterface $container): AppPdo {
-            $factory = $container->get(AppPdoFactory::class);
-            assert($factory instanceof AppPdoFactory);
-
-            return $factory->create();
-        },
-        ResponseFactoryInterface::class => ResponseFactory::class,
-    ],
-);
+$container = require dirname(__DIR__) . '/boot.php';
 
 $app = AppFactory::create(container: $container);
 
