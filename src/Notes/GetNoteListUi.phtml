@@ -63,9 +63,22 @@ $this->extends(App::PATH . '/Layout.phtml');
                         </div>
                         <div>
                             <div class="inline-block">
+                                <form
+                                    action="/notes/delete"
+                                    method="POST"
+                                >
+                                    <input type="hidden" name="id" value="<?=$note->id->toNative()?>">
+                                    <button
+                                        type="submit"
+                                        class="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                                    >
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="inline-block">
                                 <a
                                     href="/notes/view/<?=$note->id->toNative()?>"
-                                    type="submit"
                                     class="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                                 >
                                     View

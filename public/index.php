@@ -9,12 +9,13 @@ use App\Notes\Add\GetAddNoteAction;
 use App\Notes\Add\PostAddNoteAction;
 use App\Notes\Details\GetViewDetailsAction;
 use App\Notes\GetNoteListAction;
+use App\Notes\PostDeleteNoteAction;
 use App\Persistence\AppPdo;
 use App\Persistence\AppPdoFactory;
 use App\ToDo\Add\GetAddToDoAction;
 use App\ToDo\Add\PostAddToDoAction;
 use App\ToDo\GetToDoListAction;
-use App\ToDo\PostDeleteAction;
+use App\ToDo\PostDeleteToDoAction;
 use App\ToDo\PostMarkDoneAction;
 use App\ToDo\PostMarkNotDoneAction;
 use BuzzingPixel\Container\Container;
@@ -64,7 +65,7 @@ $app->post(
 
 $app->post(
     '/todos/delete',
-    PostDeleteAction::class,
+    PostDeleteToDoAction::class,
 )->add(RequireAuthMiddleware::class);
 
 $app->get('/notes', GetNoteListAction::class)
@@ -78,5 +79,10 @@ $app->post('/notes/add', PostAddNoteAction::class)
 
 $app->get('/notes/view/{id}', GetViewDetailsAction::class)
     ->add(RequireAuthMiddleware::class);
+
+$app->post(
+    '/notes/delete',
+    PostDeleteNoteAction::class,
+)->add(RequireAuthMiddleware::class);
 
 $app->run();
